@@ -1,0 +1,45 @@
+.mark {
+  font-family: Lora,serif;
+  color: #8A8580;
+
+  &.light-green {
+    color: #1AD321
+  }
+
+  &.green {
+    color: #08984A;
+  }
+
+  &.orange {
+    color: #FA9746;
+  }
+
+  &.red {
+    color: #E82012;
+  }
+
+  &.outline {
+    color: #FFFFFF;
+    border-radius: 25px;
+    padding: 5px 15px;
+    text-align: center;
+    background: #8A8580;
+
+    &.light-green {
+      background: #1AD321
+    }
+
+    &.green {
+      background: #08984A;
+    }
+
+    &.orange {
+      background: #FA9746;
+    }
+
+    &.red {
+      background: #E82012;
+    }
+  }
+
+}
