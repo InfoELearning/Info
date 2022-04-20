@@ -98,7 +98,7 @@
               :key="index"
               class="message"
             >
-              <Avatar class="avatar" />
+              <Avatar class="avatar"/>
               <div class="comment-container">
                 <div class="comment-info">
                   <p class="author">{{ message.author }}</p>
@@ -112,7 +112,7 @@
           </div>
           <div class="send-block">
             <div class="send-container">
-              <Avatar class="avatar" />
+              <Avatar class="avatar"/>
               <input v-model="messageInput" class="comment" @keypress.enter="sendMessage">
             </div>
             <div class="send-message-container">
@@ -170,14 +170,11 @@ export default {
   async created() {
     try {
       this.userVideoStream.stream = await this.getVideoStream();
-    }
-    catch  {
+    } catch {
       await this.showError('Для подключения к комнате необходимо дать разрешение на использование видеокамеры и микрофона');
       await this.$router.push('/');
       return;
     }
-
-    console.log('',this.userVideoStream.stream);
 
     this.socket = io(process.env.VUE_APP_ROOT_SOCKETS_API);
 
@@ -185,7 +182,11 @@ export default {
       this.messages = messages;
     });
 
-    this.userPeer = new Peer(undefined, { host: 'peerjs-server.herokuapp.com', secure: true, port: 443 });
+    this.userPeer = new Peer(undefined, {
+      host: 'peerjs-server.herokuapp.com',
+      secure: true,
+      port: 443
+    });
 
     this.userPeer.on('open', (userId) => {
       this.socket.emit('join-room', this.roomId, userId);
@@ -231,9 +232,9 @@ export default {
     try {
       this.socket.disconnect();
 
-      this.userVideoStream.stream.getTracks().forEach((track) => track.stop());
-    }
-    catch (error) {
+      this.userVideoStream.stream.getTracks()
+        .forEach((track) => track.stop());
+    } catch (error) {
       console.log(error);
     }
 
@@ -313,7 +314,8 @@ export default {
     async stopDemonstrationScreen() {
       this.userVideoStream.screenCast = false;
 
-      this.userVideoStream.stream.getTracks().forEach((track) => track.stop());
+      this.userVideoStream.stream.getTracks()
+        .forEach((track) => track.stop());
 
       this.userVideoStream.stream = await this.getVideoStream();
 
@@ -348,17 +350,39 @@ export default {
     endCall() {
       this.socket.disconnect();
 
-      this.userVideoStream.stream.getTracks().forEach((track) => {
-        track.stop();
-      });
+      this.userVideoStream.stream.getTracks()
+        .forEach((track) => {
+          track.stop();
+        });
       this.$router.push('/');
     },
 
     async startRecord() {
       this.mediaRecorderStream = await this.getDisplayMedia();
-      const audioTrack = this.userVideoStream.stream.getAudioTracks()[0];
-      this.mediaRecorderStream.addTrack(audioTrack);
-      this.mediaRecorder = new RecordRtc.RecordRTCPromisesHandler(this.mediaRecorderStream, {
+      console.log(' this.mediaRecorderStream ', this.userVideoStream.stream.getAudioTracks()[0]);
+      console.log('this.videoStreams[]', this.videoStreams[0].stream);
+
+      let screenStream = this.mediaRecorderStream;
+
+      const audioCtx = new AudioContext();
+
+      const destination = audioCtx.createMediaStreamDestination();
+
+      const source = audioCtx.createMediaStreamSource(this.userVideoStream.stream);
+      source.connect(destination);
+
+      console.log('this.videoStreams', this.videoStreams);
+      this.videoStreams.forEach((videoStream) => {
+        const source = audioCtx.createMediaStreamSource(videoStream.stream);
+        source.connect(destination);
+      });
+
+      const outputStream = new MediaStream();
+      outputStream.addTrack(screenStream.getVideoTracks()[0]);
+      outputStream.addTrack(destination.stream.getAudioTracks()[0]);
+
+     // this.mediaRecorderStream.addTrack(audioTrack);
+      this.mediaRecorder = new RecordRtc.RecordRTCPromisesHandler(outputStream, {
         type: 'video',
         disableLogs: true,
       });
@@ -376,9 +400,10 @@ export default {
         RecordRtc.invokeSaveAsDialog(seekableBlob, 'seekable-recordrtc.mp4');
         this.mediaRecorder = null;
 
-        this.mediaRecorderStream.getVideoTracks().forEach((track) => {
-          track.stop();
-        });
+        this.mediaRecorderStream.getVideoTracks()
+          .forEach((track) => {
+            track.stop();
+          });
       });
     },
 
@@ -422,8 +447,9 @@ main {
 ion-icon {
   cursor: pointer;
 }
+
 ion-icon.disabled {
-  background: #ACACAC!important;
+  background: #ACACAC !important;
 }
 
 .main-block {
@@ -455,7 +481,8 @@ ion-icon.disabled {
       object-fit: cover;
       border-radius: 25px;
     }
-    .selected-video{
+
+    .selected-video {
       width: 95%;
       height: auto;
     }
