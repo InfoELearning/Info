@@ -168,6 +168,17 @@ export default {
   watch: {},
 
   async created() {
+    try {
+      this.userVideoStream.stream = await this.getVideoStream();
+    }
+    catch  {
+      await this.showError('Для подключения к комнате необходимо дать разрешение на использование видеокамеры и микрофона');
+      await this.$router.push('/');
+      return;
+    }
+
+    console.log('',this.userVideoStream.stream);
+
     this.socket = io(process.env.VUE_APP_ROOT_SOCKETS_API);
 
     this.socket.on('get-all-messages', (messages) => {
@@ -184,7 +195,6 @@ export default {
       });
     });
 
-    this.userVideoStream.stream = await this.getVideoStream();
     this.startVideo();
 
     this.socket.on('user-disconnected', (userId) => {
@@ -218,9 +228,15 @@ export default {
   },
 
   beforeDestroy() {
-    this.socket.disconnect();
+    try {
+      this.socket.disconnect();
 
-    this.userVideoStream.stream.getTracks().forEach((track) => track.stop());
+      this.userVideoStream.stream.getTracks().forEach((track) => track.stop());
+    }
+    catch (error) {
+      console.log(error);
+    }
+
   },
 
   methods: {

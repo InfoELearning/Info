@@ -20,8 +20,8 @@ Vue.config.ignoredElements = ['ion-icon'];
 
 Vue.mixin({
   methods: {
-    showError(message) {
-      this.$swal.fire({
+    async showError(message) {
+      await this.$swal.fire({
         icon: 'error',
         title: 'Ошибка',
         text: message || 'Что-то пошло не так!',

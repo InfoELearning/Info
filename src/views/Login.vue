@@ -57,8 +57,8 @@ export default {
 
   data() {
     return {
-      email: 'test6@test.ru',
-      password: '4654654654156',
+      email: 'saveliu@mail.ru',
+      password: '111111',
     };
   },
 
@@ -85,9 +85,8 @@ export default {
       } catch (error) {
         if (error?.response?.data?.errorMessage) {
           this.showError(error.response.data.errorMessage);
-        } else {
-          this.showError();
         }
+        console.log('error', error);
       }
     },
 
