@@ -64,6 +64,8 @@
           <HomeworkFilesCard
             class="card"
             :homework="selectedHomework"
+            :dateEnd="new Date(task.dateEnd)"
+            :withMark="!!task.withMark"
             @sendMark="sendMark"
           />
           <HomeworkCommentsCard

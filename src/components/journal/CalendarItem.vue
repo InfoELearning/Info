@@ -2,7 +2,8 @@
   <router-link :to="`/task/${task.id}`" class="item">
     <p class="date mark" :class="className">{{ formattedDate }}</p>
     <p class="mark">
-      <Mark :value="task.mark || '-'"/>
+      <Mark :value="task.mark || '-'"
+      :task="task"/>
     </p>
   </router-link>
 </template>
@@ -28,7 +29,8 @@ export default {
 
   computed: {
     className() {
-      return getMarkClassName(this.task.mark);
+      console.log('this.task', this.task);
+      return getMarkClassName(this.task);
     },
 
     formattedDate() {

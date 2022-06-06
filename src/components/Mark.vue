@@ -16,11 +16,15 @@ export default {
       type: [String, Number],
       default: 0,
     },
+    task: {
+      type: Object,
+      required: true,
+    },
   },
 
   computed: {
     className() {
-      return getMarkClassName(this.value);
+      return getMarkClassName(this.task);
     },
   },
 };

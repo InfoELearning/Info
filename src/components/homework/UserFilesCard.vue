@@ -2,8 +2,13 @@
   <div class="card">
     <div class="card__header">
       <p>Мои задания</p>
-      <p v-if="homework.date" class="status status--completed">Отправлено</p>
-      <p v-else class="status">Назначено</p>
+      <p v-if="homework.date && withMark" class="status status--completed">Отправлено</p>
+      <p v-else-if="withMark" class="status">Назначено</p>
+      <p v-if="!withMark" class="status status--autoCompleted">Без оценки</p>
+    </div>
+    <div class="mark-container">
+      <p v-if="checkDeadline && withMark" class="deadline">Пропущен срок сдачи</p>
+      <Mark v-if="homework.mark" class="mark outline" :value="homework.mark"/>
     </div>
     <div class="card__body">
       <div class="files">
@@ -50,12 +55,14 @@
 <script>
 import File from '@/components/File.vue';
 import FileApi from '@/api/file';
+import Mark from '@/components/Mark.vue';
 
 export default {
   name: 'UserFilesCard',
 
   components: {
     File,
+    Mark,
   },
 
   props: {
@@ -67,9 +74,26 @@ export default {
       type: Array,
       required: true,
     },
+    dateEnd: {
+      type: Date,
+      required: true,
+    },
+    withMark: {
+      type: Boolean,
+      required: true,
+    },
   },
 
   methods: {
+    checkDeadline() {
+      let dateDeparture = new Date(this.homework.date);
+      if (!this.homework.date) {
+        dateDeparture = new Date();
+      }
+      // eslint-disable-next-line eqeqeq
+      return new Date(dateDeparture) > new Date(this.dateEnd) && this.withMark;
+    },
+
     addFile(event) {
       const file = event.target.files[0];
       if (file) {
@@ -118,6 +142,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.deadline {
+  font-size: 18px;
+  color: #ED7D2B;
+}
+.mark-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .card {
   background-color: #fff;
   box-shadow: 0 0 4px rgb(0 0 0 / 25%);
@@ -138,6 +171,10 @@ export default {
 
       &--completed {
         color: #ED7D2B;;
+      }
+
+      &--autoCompleted {
+        color: #8A8580;;
       }
     }
   }

@@ -5,9 +5,9 @@
         <Avatar class="avatar"/>
         <p class="name">{{ homework.pupil.lastName }} {{ homework.pupil.firstName }}</p>
       </div>
-      <div class="header__date">
-        <p>{{ formattedDate }}</p>
-        <!--        <p class="status">Пропущен срок сдачи</p>-->
+      <div v-if="withMark" class="header__date">
+        <p v-if="homework.date">{{ formattedDate }}</p>
+        <p v-if="checkDeadline" class="status">Пропущен срок сдачи</p>
       </div>
     </div>
     <div class="card__body">
@@ -21,7 +21,7 @@
           :removable="false"
         />
       </div>
-      <div v-if="homework.task.withMark" class="mark-container">
+      <div v-if="!homework.task.withMark" class="mark-container">
         <span>Задание без оценки</span>
       </div>
       <template v-else>
@@ -58,7 +58,7 @@ import Mark from '@/components/Mark.vue';
 import SmallEditIcon from '@/components/icons/SmallEditIcon.vue';
 
 export default {
-  name: 'UserFilesCard',
+  name: 'HomeworkFilesCard',
 
   components: {
     File,
@@ -72,6 +72,14 @@ export default {
       type: Object,
       required: true,
     },
+    dateEnd: {
+      type: Date,
+      required: true,
+    },
+    withMark: {
+      type: Boolean,
+      required: true,
+    },
   },
 
   data() {
@@ -83,6 +91,7 @@ export default {
 
   computed: {
     formattedDate() {
+      console.log('', this.homework.date);
       return format(new Date(this.homework.date), 'dd MMMM HH:mm', { locale: ru });
     },
   },
@@ -92,6 +101,16 @@ export default {
   },
 
   methods: {
+    checkDeadline() {
+      let dateDeparture = new Date(this.homework.date);
+      if (!this.homework.date) {
+        dateDeparture = new Date();
+      }
+      if (new Date(dateDeparture) > new Date(this.dateEnd)) {
+        return true;
+      }
+      return false;
+    },
     sendMark() {
       if (this.mark < 1 || this.mark > 5) {
         this.showError('Оценка должна быть от 1 до 5');

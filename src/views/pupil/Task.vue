@@ -11,6 +11,8 @@
             class="card"
             :homework="task.homework"
             :files="task.homework.materials"
+            :dateEnd="new Date(task.dateEnd)"
+            :withMark="!!task.withMark"
             @sendHomework="sendHomework"
           />
           <CommentsCard
