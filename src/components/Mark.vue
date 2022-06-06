@@ -18,13 +18,14 @@ export default {
     },
     task: {
       type: Object,
-      required: true,
+      required: false,
     },
   },
 
   computed: {
     className() {
-      return getMarkClassName(this.task);
+      const value = this.task ? this.task : this.value;
+      return getMarkClassName(value);
     },
   },
 };

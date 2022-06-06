@@ -29,7 +29,6 @@ export default {
 
   computed: {
     className() {
-      console.log('this.task', this.task);
       return getMarkClassName(this.task);
     },
 
