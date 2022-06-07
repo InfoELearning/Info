@@ -49,6 +49,16 @@
             </div>
           </router-link>
         </div>
+        <div class="menu-item" :class="{'active': $route.path === '/notifications'}">
+          <router-link to="/notifications" active-class="active" exact class="side-btn">
+            <div class="link-container">
+              <span class="icon">
+            <NotificationIcon/>
+          </span>
+              <span class="title">Оповещения</span>
+            </div>
+          </router-link>
+        </div>
         <div
           class="menu-item menu-item--exit"
           :class="{'active': $route.path === '/messages'}"
@@ -62,22 +72,6 @@
         </div>
       </div>
       <div v-if="userRole === 'teacher'" class="menu-items">
-<!--        <div class="menu-item" :class="{'active': $route.path === '/teacher/calendar'}">-->
-<!--          <router-link to="/teacher/calendar">-->
-<!--          <span class="icon">-->
-<!--            <CalendarIcon/>-->
-<!--          </span>-->
-<!--            <span class="title">Календарь</span>-->
-<!--          </router-link>-->
-<!--        </div>-->
-<!--        <div class="menu-item" :class="{'active': $route.path === '/teacher/'}">-->
-<!--          <router-link to="/teacher/">-->
-<!--          <span class="icon">-->
-<!--            <JournalIcon/>-->
-<!--          </span>-->
-<!--            <span class="title">Журнал оценок</span>-->
-<!--          </router-link>-->
-<!--        </div>-->
         <div class="menu-item" :class="{'active': $route.path === '/teacher/lessons'}">
           <router-link to="/teacher/lessons" active-class="active" exact class="side-btn">
             <div class="link-container">
@@ -98,22 +92,17 @@
             </div>
           </router-link>
         </div>
-<!--        <div class="menu-item" :class="{'active': $route.path === '/teacher/messages'}">-->
-<!--          <router-link to="/teacher/messages">-->
-<!--          <span class="icon">-->
-<!--            <MessagesIcon/>-->
-<!--          </span>-->
-<!--            <span class="title">Сообщения</span>-->
-<!--          </router-link>-->
-<!--        </div>-->
-<!--        <div class="menu-item" :class="{'active': $route.path === '/teacher/messages'}">-->
-<!--          <router-link to="/teacher/settings">-->
-<!--          <span class="icon">-->
-<!--            <SettingsIcon/>-->
-<!--          </span>-->
-<!--            <span class="title">Настройки</span>-->
-<!--          </router-link>-->
-<!--        </div>-->
+        <div class="menu-item" :class="{'active': $route.path === '/teacher/notifications'}">
+          <router-link to="/teacher/notifications" active-class="active" exact class="side-btn">
+            <div class="link-container">
+              <span class="icon">
+                <div v-if="countNotifications" class="circle"></div>
+                <NotificationIcon/>
+              </span>
+              <span class="title">Оповещения</span>
+            </div>
+          </router-link>
+        </div>
         <div
           class="menu-item menu-item--exit"
           :class="{'active': $route.path === '/messages'}"
@@ -137,11 +126,14 @@ import CloseIcon from '@/components/icons/CloseIcon.vue';
 import LessonIcon from '@/components/icons/LessonIcon.vue';
 import VideoIcon from '@/components/icons/VideoIcon.vue';
 import ExitIcon from '@/components/icons/ExitIcon.vue';
+import NotificationIcon from '@/components/icons/NotificationIcon.vue';
+import User from '@/api/user';
 
 export default {
   name: 'Hamburger',
 
   components: {
+    NotificationIcon,
     HamburgerIcon,
     CloseIcon,
     JournalIcon,
@@ -153,6 +145,8 @@ export default {
   data() {
     return {
       isOpen: true,
+      checkNotificationsInterval: null,
+      countNotifications: 0,
     };
   },
 
@@ -174,13 +168,28 @@ export default {
 
   created() {
     document.body.classList.add('m--burger');
+    this.getNotification();
+    this.checkNotifications();
   },
-
+  beforeDestroy() {
+    clearInterval(this.checkNotificationsInterval);
+  },
   methods: {
     logout() {
       localStorage.removeItem('token');
       this.$store.commit('user/setUserInfo', null);
       this.$router.push('/login');
+    },
+
+    checkNotifications() {
+      this.checkNotificationsInterval = setInterval(() => {
+        this.getNotification();
+      }, 2000);
+    },
+
+    async getNotification() {
+      const response = await User.getCountNotifications();
+      this.countNotifications = Number(response.data);
     },
   },
 };
@@ -265,6 +274,17 @@ export default {
           justify-content: center;
           align-items: center;
           margin-left: 15px;
+          position: relative;
+
+          .circle {
+            position: absolute;
+            background: #ff0000;
+            border-radius: 50%;
+            height: 6px;
+            width: 6px;
+            top: 15px;
+            left: 27px;
+          }
 
           @media (max-height: 750px) {
             height: 45px;

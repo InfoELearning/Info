@@ -41,6 +41,11 @@ const routes = [
         name: 'VideoRoom',
         component: () => import('../views/VideoRoom.vue'),
       },
+      {
+        path: 'notifications',
+        name: 'Notifications',
+        component: () => import('../views/Notifications.vue'),
+      },
     ],
     beforeEnter: (to, from, next) => {
       const userRole = store.state.user.user.role;
@@ -95,6 +100,11 @@ const routes = [
         path: 'pupils/lesson/:id',
         name: 'pupils',
         component: () => import('../views/teacher/Pupils.vue'),
+      },
+      {
+        path: 'notifications',
+        name: 'Notifications',
+        component: () => import('../views/Notifications.vue'),
       },
     ],
     beforeEnter: (to, from, next) => {

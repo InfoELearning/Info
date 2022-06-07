@@ -10,4 +10,31 @@ export default {
       },
     });
   },
+  getNotifications() {
+    return HTTP({
+      url: '/notifications',
+      method: 'GET',
+      headers: {
+        Authorization: `Token ${localStorage.getItem('token')}`,
+      },
+    });
+  },
+  getCountNotifications() {
+    return HTTP({
+      url: '/notifications/check',
+      method: 'GET',
+      headers: {
+        Authorization: `Token ${localStorage.getItem('token')}`,
+      },
+    });
+  },
+  deleteNotification(id) {
+    return HTTP({
+      url: `/notifications/${id}`,
+      method: 'DELETE',
+      headers: {
+        Authorization: `Token ${localStorage.getItem('token')}`,
+      },
+    });
+  },
 };

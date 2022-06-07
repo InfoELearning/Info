@@ -183,21 +183,25 @@ export default {
 
   methods: {
     async getTask() {
-      const taskId = this.$route.params.id;
-      const response = await Teacher.getTask(taskId);
-      this.task = response.data;
+      try {
+        const taskId = this.$route.params.id;
+        const response = await Teacher.getTask(taskId);
+        this.task = response.data;
 
-      this.waitingHomeworks = this.task.homeworks
-        .filter((homework) => !homework.isApproved && homework.date);
+        this.waitingHomeworks = this.task.homeworks
+          .filter((homework) => !homework.isApproved && homework.date);
 
-      this.completedHomeworks = this.task.homeworks
-        .filter((homework) => homework.isApproved);
+        this.completedHomeworks = this.task.homeworks
+          .filter((homework) => homework.isApproved);
 
-      this.rejectedHomeworks = this.task.homeworks
-        .filter((homework) => !homework.date && !homework.isApproved);
+        this.rejectedHomeworks = this.task.homeworks
+          .filter((homework) => !homework.date && !homework.isApproved);
 
-      this.commentedHomeworks = this.task.homeworks
-        .filter((homework) => homework.isNewComments);
+        this.commentedHomeworks = this.task.homeworks
+          .filter((homework) => homework.isNewComments);
+      } catch {
+        await this.$router.replace('/page-not-found');
+      }
     },
 
     async editTask(task) {
@@ -207,8 +211,12 @@ export default {
     },
 
     async getHomework() {
-      const response = await Teacher.getHomework(this.selectedHomeworkId);
-      this.selectedHomework = response.data;
+      try {
+        const response = await Teacher.getHomework(this.selectedHomeworkId);
+        this.selectedHomework = response.data;
+      } catch {
+        await this.$router.replace('/page-not-found');
+      }
     },
 
     async sendComment(comment) {
