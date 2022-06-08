@@ -7,7 +7,7 @@
       <p v-if="!withMark" class="status status--autoCompleted">Без оценки</p>
     </div>
     <div class="mark-container">
-      <p v-if="checkDeadline && withMark" class="deadline">Пропущен срок сдачи</p>
+      <p v-if="checkDeadline() && withMark" class="deadline">Пропущен срок сдачи</p>
       <Mark v-if="homework.mark" class="mark outline" :value="homework.mark"/>
     </div>
     <div class="card__body">
@@ -90,7 +90,6 @@ export default {
       if (!this.homework.date) {
         dateDeparture = new Date();
       }
-      // eslint-disable-next-line eqeqeq
       return new Date(dateDeparture) > new Date(this.dateEnd) && this.withMark;
     },
 

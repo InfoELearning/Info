@@ -7,7 +7,7 @@
       </div>
       <div v-if="withMark" class="header__date">
         <p v-if="homework.date">{{ formattedDate }}</p>
-        <p v-if="checkDeadline" class="status">Пропущен срок сдачи</p>
+        <p v-if="checkDeadline()" class="status">Пропущен срок сдачи</p>
       </div>
     </div>
     <div class="card__body">

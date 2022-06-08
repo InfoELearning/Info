@@ -53,8 +53,9 @@
           <router-link to="/notifications" active-class="active" exact class="side-btn">
             <div class="link-container">
               <span class="icon">
-            <NotificationIcon/>
-          </span>
+                <div v-if="countNotifications" class="circle"></div>
+                <NotificationIcon/>
+              </span>
               <span class="title">Оповещения</span>
             </div>
           </router-link>

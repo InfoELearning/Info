@@ -1,7 +1,7 @@
 <template>
   <div
     class="card"
-    :class="{'card--active': notification.viewed}"
+    :class="{'card--active': !notification.viewed}"
   >
     <div class="card__header">
       <p class="date">{{ format(new Date(notification.date), 'dd.MM.yy') }}</p>

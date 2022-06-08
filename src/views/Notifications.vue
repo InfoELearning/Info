@@ -46,7 +46,7 @@ export default {
   methods: {
     async getNotifications() {
       const response = await User.getNotifications();
-      this.notifications = response.data;
+      this.notifications = response.data.reverse();
     },
 
     deleteNotification(id) {
