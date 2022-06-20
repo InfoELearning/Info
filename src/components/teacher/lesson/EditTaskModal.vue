@@ -31,7 +31,7 @@
               @change="addMaterial"
             >
             <label class="file-input__label" for="file-input">
-              + Добавить решение
+              + Добавить материал
             </label>
           </div>
           <v-select
