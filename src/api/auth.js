@@ -8,7 +8,6 @@ export default {
       data,
     });
   },
-
   register(data) {
     return HTTP({
       url: 'auth/register',
