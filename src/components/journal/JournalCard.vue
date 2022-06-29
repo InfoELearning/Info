@@ -76,8 +76,8 @@ export default {
   }
 
   .card__body {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: auto auto auto;
 
     .card__item {
       margin: 20px 25px;
